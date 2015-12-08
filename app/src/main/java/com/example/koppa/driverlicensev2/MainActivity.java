@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
 
+        /*
+        *  FUCK LOGIC
+        * */
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         LoginFragment loginFragment = new LoginFragment();
