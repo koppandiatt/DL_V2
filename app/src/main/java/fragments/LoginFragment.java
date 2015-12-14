@@ -1,8 +1,11 @@
 package fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,16 +27,18 @@ import com.example.koppa.driverlicensev2.R;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 import DataAccessLayer.DataAccessLayer;
+import Models.IFragmentsStarter;
+import Models.QuestionModel;
 
 /**
  * Created by koppa on 26.11.2015.
  */
 public class LoginFragment extends Fragment {
 
-    DataAccessLayer dal;
     EditText txtUser, txtPass;
     Button btnLogin;
     ProgressBar progressBar;
@@ -43,31 +48,28 @@ public class LoginFragment extends Fragment {
     private static final int ADMIN = 294;
     private static final int CLIENT = 223;
 
+    private IFragmentsStarter _fragmentStarter = null;
 
-    public LoginFragment() {
-        // Required empty public constructor
-    }
+    public LoginFragment(){}
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         view =  inflater.inflate(R.layout.fragment_login, container, false);
-        dal = new DataAccessLayer();
 
         txtUser = (EditText) view.findViewById(R.id.txtName);
         txtPass = (EditText) view.findViewById(R.id.txtPass);
         btnLogin = (Button) view.findViewById(R.id.btnLogin);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.mainprogressBar);
         progressBar.setVisibility(View.GONE);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //DoLogin doLogin = new DoLogin();
-                //doLogin.execute("");
-                callSelectedUserFragment(CLIENT);
+                DoLogin doLogin = new DoLogin();
+                doLogin.execute("");
+                //callSelectedUserFragment(CLIENT);
             }
         });
 
@@ -86,11 +88,13 @@ public class LoginFragment extends Fragment {
 
         if (user == ADMIN){
             navigationView.inflateMenu(R.menu.nav_menu_admin);
+
             ((TextView) getActivity().findViewById(R.id.txtUserName)).setText("Admin");
             ((TextView) getActivity().findViewById(R.id.txtUserMail)).setText("admin@admin.com");
             frag = new AdminFragment();
         }else if(user == CLIENT ){
             navigationView.inflateMenu(R.menu.nav_menu_client);
+
             ((TextView) getActivity().findViewById(R.id.txtUserName)).setText("Client");
             ((TextView) getActivity().findViewById(R.id.txtUserMail)).setText("client@client.com");
             frag = new ClientFragment();
@@ -117,42 +121,65 @@ public class LoginFragment extends Fragment {
             progressBar.setVisibility(View.VISIBLE);
         }
 
+        private void readData()
+        {
+
+            Resources resources = getActivity().getResources();
+            String[] questions = resources.getStringArray(R.array.questions);
+
+            for(int i=0; i<questions.length; ++i)
+            {
+
+
+                String[] oneQuestion = questions[i].split("#");
+
+                if (oneQuestion[5].equals("null")) continue;
+
+
+                int helyes = Integer.parseInt(oneQuestion[4]);
+                long id = DataAccessLayer.getInstance().InsertNewQuestion(oneQuestion[0],oneQuestion[5]);
+                for (int k = 1; k <=3;++k){
+                    if (k == helyes)
+                        DataAccessLayer.getInstance().InsertNewAnswers(id,oneQuestion[k],1);
+                    else
+                        DataAccessLayer.getInstance().InsertNewAnswers(id,oneQuestion[k],0);
+                }
+
+            }
+        }
+
 
         @Override
         protected String doInBackground(String... params) {
 
+
             String message = SUCCESS;
+            role = "";
+            try{
+                if(userid.trim().equals("") || userpass.trim().equals("")){
+                    message = "Please enter the UserName and Password";
+                }else{
 
-            if(userid.trim().equals("") || userpass.trim().equals("")){
-                message = "Please enter the UserName and Password";
-            }else{
-                try{
-                    Connection connection = dal.CONN();
-                    if(connection == null){
-                        message = "Error in connection to the Server";
-                    }else
-                    {
-                        String query = "select * from users where User='" + userid + "' and Password='" + userpass + "'";
-                        Statement statement = connection.createStatement();
-                        ResultSet resultSet = statement.executeQuery(query);
-                        if(resultSet.next())
-                        {
-                            role = resultSet.getString("role");
-                            Log.d("ROLE", role);
-                            // message = "Login successfull";
-
-                        }
-                        else{
-                            message = "Invalid Credentials";
-
-                        }
+                   // DataAccessLayer.getInstance();
+                    role = DataAccessLayer.getInstance().getUserRole(userid.trim(),userpass.trim());
+                   // long QID = DataAccessLayer.getInstance().InsertNewQuestion("dasdasd","asfasfas");
+                   // int arows = DataAccessLayer.getInstance().InsertNewAnswers(QID, "lofasz", 1);
+                   // readData();
+                   // Log.v("TEMP ", arows + "");
+                    if (role == null){
+                        message = "Wrong credentials!";
+                    }else{
+                        if (role.equals(DataAccessLayer.ERROR))  message = "Error occured in connection!";
                     }
-                }catch (Exception e){
-                    message = "Exceptions";
 
                 }
+                return message;
+            }catch (Exception ex){
+                Log.e("err",ex.getMessage());
             }
-            return message;
+
+            return "Error occured in connection!";
+
         }
 
         @Override
@@ -162,18 +189,33 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                 return;
             }
+          //  callSelectedUserFragment(CLIENT);
+            if (_fragmentStarter == null) return;
             switch (role)
             {
-                case "admin":
-                    callSelectedUserFragment(ADMIN);
+                case DataAccessLayer.ADMIN:
+                    _fragmentStarter.addAdminFragment();
                     break;
-                case "client":
-                    callSelectedUserFragment(CLIENT);
+                case DataAccessLayer.CLIENT:
+                    _fragmentStarter.addClientFragment();
                     break;
                 default:
-                    break;
+                    Toast.makeText(getActivity(),"Wrong credentials!",Toast.LENGTH_LONG).show();
+               break;
             }
+
         }
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+           _fragmentStarter = (IFragmentsStarter) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 }

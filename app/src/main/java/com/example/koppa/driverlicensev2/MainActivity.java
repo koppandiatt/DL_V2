@@ -1,7 +1,9 @@
 package com.example.koppa.driverlicensev2;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,9 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import Models.IFragmentsStarter;
+import fragments.AdminFragment;
+import fragments.ClientFragment;
 import fragments.LoginFragment;
+import fragments.TestLicense;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IFragmentsStarter {
+
+
+    private static int QUESTIONNUM = 26;
+    private static int TESTTIME = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setAction("Action", null).show();
             }
         });
-        //float button
+
+        fab.setVisibility(View.INVISIBLE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -49,17 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*
-        *  FUCK LOGIC
-        * */
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        LoginFragment loginFragment = new LoginFragment();
-        fragmentTransaction.add(R.id.fragment_container, loginFragment);
-        fragmentTransaction.commit();
-
-
+        addLoginFragment();
     }
 
     @Override
@@ -90,8 +91,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    public void addLoginFragment(){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        LoginFragment loginFragment = new LoginFragment();
+        fragmentTransaction.add(R.id.fragment_container, loginFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void addClientFragment(){
+        Fragment frag = null;
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        NavigationView navigationView;
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.inflateMenu(R.menu.nav_menu_client);
+        frag = new ClientFragment();
+        toolbar.setVisibility(View.VISIBLE);
+
+        fragmentTransaction.replace(R.id.fragment_container, frag);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+    }
+
+    public void addAdminFragment(){
+        Fragment frag = null;
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        NavigationView navigationView;
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.inflateMenu(R.menu.nav_menu_admin);
+        frag = new AdminFragment();
+        toolbar.setVisibility(View.VISIBLE);
+
+        fragmentTransaction.replace(R.id.fragment_container, frag);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    public void addTestLicenseFragment(){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        TestLicense testLicense = new TestLicense();
+        fragmentTransaction.replace(R.id.fragment_container, testLicense);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -106,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             break;
             case R.id.nav_client_new_test:
                 Toast.makeText(this,"Start New Test", Toast.LENGTH_LONG).show();
+                addTestLicenseFragment();
                 break;
             default:
                 break;
