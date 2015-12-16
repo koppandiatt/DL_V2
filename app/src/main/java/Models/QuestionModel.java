@@ -1,5 +1,7 @@
 package Models;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 
 /**
@@ -11,13 +13,17 @@ public class QuestionModel {
 
     private  int _id;
 
-    private ArrayList<String> _answers;
+    private ArrayList<Pair<String,Boolean>> _answers;
+
+
 
     private String _question;
 
     private String _imgUrl;
 
-    public QuestionModel(ArrayList<String> answers, int correctAnsIndex, int id){
+    private boolean _wasAnswered;
+
+    public QuestionModel(ArrayList<Pair<String,Boolean>> answers, int correctAnsIndex, int id){
 
         this._answers = answers;
         this._correctAnsIndex = correctAnsIndex;
@@ -28,18 +34,19 @@ public class QuestionModel {
     public QuestionModel(){
         this._id = -1;
         this._correctAnsIndex = -1;
-        this._answers = new ArrayList<String>();
+        this._answers = new ArrayList<Pair<String,Boolean>>();
         this._question = null;
         this._imgUrl = null;
+        this._wasAnswered = false;
 
     }
 
-    public ArrayList<String> getAnswers() {
+    public ArrayList<Pair<String,Boolean>> getAnswers() {
         return _answers;
     }
 
 
-    public void setAnswers(ArrayList<String> answers) {
+    public void setAnswers(ArrayList<Pair<String,Boolean>> answers) {
         this._answers = answers;
     }
 
@@ -53,6 +60,10 @@ public class QuestionModel {
 
     public void setQuestion(String _question) {
         this._question = _question;
+    }
+
+    public void setHaveAnsweredCorrect(boolean _haveAnsweredCorrect) {
+        this._wasAnswered = _haveAnsweredCorrect;
     }
 
     public void setimgUrl(String _imgUrl) {
@@ -75,10 +86,15 @@ public class QuestionModel {
         return _correctAnsIndex;
     }
 
-
-    public void addNewAnswer(String answer){
-        this._answers.add(answer);
+    public boolean getHaveAnsweredCorrect(boolean _haveAnsweredCorrect) {
+        return _haveAnsweredCorrect;
     }
+
+
+    public void addNewAnswer(String answer, boolean correct){
+        this._answers.add(new Pair<String, Boolean>(answer,correct));
+    }
+
 
 
 }
