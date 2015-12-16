@@ -11,7 +11,7 @@ public class QuestionModel {
 
     private int _correctAnsIndex;
 
-    private  int _id;
+    private int _id;
 
     private ArrayList<Pair<String,Boolean>> _answers;
 

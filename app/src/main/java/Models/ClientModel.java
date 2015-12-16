@@ -13,81 +13,43 @@ import DataAccessLayer.DataAccessLayer;
  */
 public class ClientModel {
 
+    private long id;
 
-    private static final String QRANDOMQUESTION  = "SELECT * FROM questions WHERE Status = 1 ORDER BY RAND() LIMIT 1";
+    private String firstname;
 
-    //  settings fields
+    private String fastname;
 
-    private static int clientID;
+    private String email;
 
-    private static int questionNUM;
-
-    private static int time;
-
-
-    public static ArrayList<QuestionModel> getQuestion(int n){
-
-
-        ArrayList<QuestionModel> questionModels = new ArrayList<QuestionModel>();
-
-        try {
-            for (int i = 0; i < n;++i){
-
-                QuestionModel questionModel = new QuestionModel();
-                //"SELECT * FROM questions WHERE Status = 1 ORDER BY RAND() LIMIT 1";
-
-                ResultSet resultSet = DataAccessLayer.getInstance().select(QRANDOMQUESTION);
-                int QID = -1;
-                if (resultSet.next()) {
-
-
-
-                    QID = resultSet.getInt("ID");
-                    questionModel.setId(QID);
-                    questionModel.setQuestion(resultSet.getString("Text"));
-                    questionModel.setimgUrl("Image");
-
-                    Log.v("teszt", questionModel.getQuestion());
-
-                }
-
-                Log.v("QID", "" + QID);
-
-                String query = "SELECT * FROM answers WHERE Status = 1 and QID = '" + QID + "'" ;
-
-                resultSet = DataAccessLayer.getInstance().select(query);
-                int correctIndex = 1;
-
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("Correct");
-                    boolean temp = id > 0 ? true: false;
-                    questionModel.addNewAnswer(resultSet.getString("Text"),temp);
-
-                    Log.v("teszt",resultSet.getString("Text"));
-                    if (id == 1) questionModel.setCorrectAnsIndex(correctIndex);
-                    correctIndex++;
-                }
-
-                questionModels.add(questionModel);
-            }
-            return  questionModels;
-
-        } catch (Exception ex) {
-            Log.e("dberror", ex.getMessage());
-            return null;
-        }
-
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public static int getClientID() {
-        return clientID;
+    public void setFastname(String fastname) {
+        this.fastname = fastname;
     }
 
-    public static int getQuestionNUM() {
-        return questionNUM;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public static int getTime() {
-        return time;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFastname() {
+        return fastname;
+    }
+
+    public String getFirstname() {
+        return firstname;
     }
 }

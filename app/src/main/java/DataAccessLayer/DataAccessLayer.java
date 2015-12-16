@@ -110,6 +110,20 @@ public class DataAccessLayer {
         return null;
     }
 
+    public void insert(String query){
+
+        if (_conn == null) {
+            return;
+        }
+        try {
+            Statement statement = _conn.createStatement();
+            statement.executeQuery(query);
+        }catch(Exception ex){
+            Log.e("dberror","Error occured at selecting");
+        }
+        return;
+    }
+
 
     public long InsertNewQuestion(String question, String imgUrl) {
 
