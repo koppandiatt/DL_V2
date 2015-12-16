@@ -24,6 +24,8 @@ public class MyAdapter  extends ArrayAdapter<StatisticModel> {
         super(context, R.layout.statitem_layout, statModels);
         this.context = context;
         statisticModels = statModels;
+
+        
     }
 
     @Override
