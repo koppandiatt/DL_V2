@@ -37,7 +37,7 @@ public class TestLicense extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        
+
     }
 
     @Override
