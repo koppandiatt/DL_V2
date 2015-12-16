@@ -131,6 +131,9 @@ public class DataAccessLayer {
             }
 
 
+        } catch (SQLException se){
+            Log.e("sqlError", se.getMessage());
+            return -1;
         } catch (Exception ex) {
             Log.e("dberror", ex.getMessage());
             return -1;
@@ -219,11 +222,14 @@ public class DataAccessLayer {
             if (affectedRows == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
+            String s = String.valueOf(affectedRows);
+            Log.d("affectedRow", s);
+            return affectedRows;
 
 
-           return affectedRows;
-
-
+        } catch (SQLException se){
+            Log.e("sqlError", se.toString());
+            return -1;
         } catch (Exception ex) {
             Log.e("dberror", ex.getMessage());
             return -1;
