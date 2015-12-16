@@ -3,7 +3,6 @@ package com.example.koppa.driverlicensev2;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,7 +19,7 @@ import android.widget.Toast;
 
 import Models.IFragmentsStarter;
 import fragments.AdminFragment;
-import fragments.CUQuestionFragment;
+import fragments.AddQuestionFragment;
 import fragments.ClientFragment;
 import fragments.LoginFragment;
 import fragments.QuestionListFragment;
@@ -145,8 +144,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void addCUQuestionFragment(){
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        CUQuestionFragment cuQuestionFragment = new CUQuestionFragment();
-        fragmentTransaction.replace(R.id.fragment_container, cuQuestionFragment);
+        AddQuestionFragment addQuestionFragment = new AddQuestionFragment();
+        fragmentTransaction.replace(R.id.fragment_container, addQuestionFragment);
         fragmentTransaction.commit();
     }
 
