@@ -117,9 +117,9 @@ public class DataAccessLayer {
         }
         try {
             Statement statement = _conn.createStatement();
-            statement.executeQuery(query);
+            statement.executeUpdate(query);
         }catch(Exception ex){
-            Log.e("dberror","Error occured at selecting");
+            Log.e("dberror","Error occured at selecting" + ex.getMessage());
         }
         return;
     }

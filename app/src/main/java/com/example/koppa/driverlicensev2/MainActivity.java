@@ -24,6 +24,7 @@ import fragments.AddQuestionFragment;
 import fragments.ClientFragment;
 import fragments.LoginFragment;
 import fragments.QuestionListFragment;
+import fragments.StatisticFragment;
 import fragments.TestLicense;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IFragmentsStarter {
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         Settings.questionNUM = 10;
         Settings.limitPoint = 7;
@@ -110,6 +113,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.commit();
     }
 
+    public void addStatisticFragment(){
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        StatisticFragment statisticFragment = new StatisticFragment();
+        fragmentTransaction.add(R.id.fragment_container,statisticFragment);
+        fragmentTransaction.commit();
+
+    }
+
     public void addClientFragment(){
         Fragment frag = null;
         FragmentManager fragmentManager = getFragmentManager();
@@ -177,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id)
         {
             case R.id.nav_admin_add:
-                Toast.makeText(this,"Admin ADD", Toast.LENGTH_LONG).show();
+
                 addCUQuestionFragment();
             break;
 
@@ -186,9 +199,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_client_new_test:
-                Toast.makeText(this,"Start New Test", Toast.LENGTH_LONG).show();
+
                 addTestLicenseFragment();
                 break;
+            case R.id.nav_client_statistics:
+                addStatisticFragment();
+
             default:
                 break;
         }

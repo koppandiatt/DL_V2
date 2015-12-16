@@ -1,6 +1,7 @@
 package Tools;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +17,16 @@ import Models.StatisticModel;
 /**
  * Created by kovacslev on 12/16/2015.
  */
-public class MyAdapter  extends ArrayAdapter<StatisticModel> {
+
+public class StatisticListAdapter extends ArrayAdapter<StatisticModel> {
     private final Context context;
     private ArrayList<StatisticModel> statisticModels;
 
-    public MyAdapter(Context context, ArrayList<StatisticModel> statModels) {
+    public StatisticListAdapter(Context context, ArrayList<StatisticModel> statModels) {
         super(context, R.layout.statitem_layout, statModels);
         this.context = context;
         statisticModels = statModels;
 
-        
     }
 
     @Override
@@ -34,13 +35,13 @@ public class MyAdapter  extends ArrayAdapter<StatisticModel> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.statitem_layout, parent, false);
         TextView statTVtime = (TextView) rowView.findViewById(R.id.statTVtime);
-        TextView statTVsuccess = (TextView) rowView.findViewById(R.id.statTVSuccess);
-        TextView statTVpoints = (TextView) rowView.findViewById(R.id.statTVpoints);
+        TextView statTVsuccess = (TextView) rowView.findViewById(R.id.statTVsuccess);
+        TextView statTVdate = (TextView) rowView.findViewById(R.id.statTVdate);
 
         statTVtime.setText(statisticModels.get(position).getTime());
-        statTVsuccess.setText(statisticModels.get(position).getSuccess());
-        statTVpoints.setText(statisticModels.get(position).getReachedPoints());
-        // Change the icon for Windows and iPhone
+        statTVsuccess.setText(String.valueOf(statisticModels.get(position).getSuccess()));
+        statTVdate.setText(String.valueOf(statisticModels.get(position).getReachedPoints()));
+
 
 
         return rowView;
