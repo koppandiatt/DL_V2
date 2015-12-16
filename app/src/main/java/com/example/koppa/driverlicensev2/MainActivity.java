@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import Models.IFragmentsStarter;
 import Tools.BackHandledFragment;
+import Models.Settings;
 import fragments.AdminFragment;
 import fragments.AddQuestionFragment;
 import fragments.ClientFragment;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Settings.questionNUM = 10;
+        Settings.limitPoint = 7;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -14,17 +15,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.koppa.driverlicensev2.R;
+import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import Controller.ClientController;
 import DataAccessLayer.DataAccessLayer;
 import Models.ClientModel;
+import Models.IFragmentsStarter;
 import Models.QuestionModel;
+import Models.Settings;
+import Models.StatisticModel;
 
 
 public class TestLicense extends Fragment {
@@ -42,7 +54,23 @@ public class TestLicense extends Fragment {
 
     private CheckBox answer1,answer2,answer3;
 
+    private Button btnNext;
 
+    private TextView timerView;
+
+    private ImageView imgView;
+
+    private TextView pageNumView;
+
+    private ClientModel clientModel;
+
+    Timer timer;
+
+    TimerTask timerTask;
+
+    final Handler handler = new Handler();
+
+    private IFragmentsStarter fragmentsStarter;
 
     public TestLicense() {
 
@@ -73,10 +101,25 @@ public class TestLicense extends Fragment {
 
     }
 
+    public void setClientModel( ClientModel clientModel){
+        this.clientModel = clientModel;
+    }
+
     private void initializeGUIReferences(View view){
 
-        Button btnNext = (Button) view.findViewById(R.id.BTNtestnext);
+        btnNext = (Button) view.findViewById(R.id.BTNtestnext);
         Button btnBack = (Button) view.findViewById(R.id.BTNtestback);
+
+        pageNumView = (TextView) view.findViewById(R.id.TVpagenum);
+
+        timerView = (TextView) view.findViewById(R.id.TVtesttime);
+
+        imgView = (ImageView) view.findViewById(R.id.IVtestimg);
+
+        btnNext.setText("Next");
+
+        pageNumView.setText("0/" + Settings.questionNUM);
+
         btnNext.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -98,6 +141,8 @@ public class TestLicense extends Fragment {
         answer2 = (CheckBox) view.findViewById(R.id.answ2);
         answer3 = (CheckBox) view.findViewById(R.id.answ3);
 
+
+
         progressBar = (ProgressBar) getActivity().findViewById(R.id.mainprogressBar);
 
 
@@ -106,6 +151,8 @@ public class TestLicense extends Fragment {
     private void fillQuestionGUI(int index){
 
         QuestionModel qModel = _questions.get(index);
+
+        Picasso.with(getActivity()).load(qModel.getimgUrl()).into(imgView);
         questionView.setText(qModel.getQuestion());
         answer1.setText(qModel.getAnswers().get(0).first);
         answer2.setText(qModel.getAnswers().get(1).first);
@@ -116,17 +163,35 @@ public class TestLicense extends Fragment {
     }
 
     private void nextStep(){
-        Log.v("teszt", _questions.size() + "");
-        if (currentQPOS > -1){
-            getAnswers();
-        }
+        try {
 
-        if ((currentQPOS +  1) < _questions.size())
-        {
-            ++currentQPOS;
-            fillQuestionGUI(currentQPOS);
-        }else{
-            winInformationDIalog();
+            Log.v("teszt", _questions.size() + "");
+
+            if ((currentQPOS + 1) < _questions.size()) {
+
+
+
+
+
+                if ((currentQPOS + 1) == (_questions.size() - 1)) {
+                    btnNext.setText("Evaluate");
+                }
+                if (currentQPOS > -1) {
+                    getAnswers();
+                }
+                ++currentQPOS;
+                Log.v("currentPos", currentQPOS + "");
+                pageNumView.setText("" + (currentQPOS + 1) + "/" + Settings.questionNUM);
+                fillQuestionGUI(currentQPOS);
+            } else {
+
+
+                getAnswers();
+                winInformationDIalog();
+                stoptimertask();
+            }
+        }catch (Exception ex){
+            Log.v("testerror",ex.getMessage());
         }
     }
 
@@ -139,62 +204,140 @@ public class TestLicense extends Fragment {
     }
 
     private void prevStep(){
-        if (currentQPOS > -1){
-            getAnswers();
+
+
+        if ((currentQPOS - 1) < _questions.size()-1){
+            btnNext.setText("Next");
         }
 
         if ((currentQPOS - 1) >= 0){
+
             --currentQPOS;
+            Log.v("currentPos", currentQPOS + "");
+            int tempPos = currentQPOS  + 1;
+            if (tempPos < 0){
+                tempPos = 0;
+            }
+
+            pageNumView.setText("" + tempPos + "/" + Settings.questionNUM);
             fillQuestionGUI(currentQPOS);
         }
     }
 
-    public void checkAnswerIsCorrect(){
+    public int checkAnswerIsCorrect(){
         int countCorrect = 0;
+
+        Log.v("lofasz",_answers.size() + "");
+
         for (int i = 0; i < _questions.size(); ++i){
             boolean isCorret = true;
-            for (int j = 0; j< _questions.get(i).getAnswers().size();++i){
+
+            for (int j = 0; j < _questions.get(i).getAnswers().size();++j){
                 if (_questions.get(i).getAnswers().get(j).second != _answers.get(i).get(j)){
                     isCorret = false;
                 }
             }
             if (isCorret) countCorrect++;
         }
-
+        return countCorrect;
 
 
     }
 
     private void winInformationDIalog(){
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-        builder1.setMessage("Write your message here.");
-        builder1.setCancelable(true);
-        builder1.setPositiveButton("yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        builder1.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
 
-        AlertDialog alert11 = builder1.create();
-        alert11.show();
+
+
+
+        int resultCorrect = checkAnswerIsCorrect();
+        StatisticModel statisticModel = new StatisticModel();
+        statisticModel.setMaxPoints(Settings.questionNUM);
+        statisticModel.setReachedPoints(resultCorrect);
+        statisticModel.setMinReachPoints(Settings.limitPoint);
+        statisticModel.setTime(timerView.getText().toString());
+
+        int success = resultCorrect > Settings.limitPoint ? 1 : 0;
+
+        UpdateResult updateResult = new UpdateResult(resultCorrect);
+        updateResult.execute(statisticModel);
+
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        try {
+            fragmentsStarter = (IFragmentsStarter) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
 
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+
+    }
+
+
+    public void startTimer() {
+
+        timer = new Timer();
+
+        initializeTimerTask();
+
+        timer.schedule(timerTask, 5, 1000);
+    }
+
+
+
+    public void stoptimertask() {
+
+        if (timer != null) {
+
+            timer.cancel();
+
+            timer = null;
+        }
+    }
+
+
+
+    public void initializeTimerTask() {
+
+        timerTask = new TimerTask() {
+
+            public void run() {
+
+
+
+
+                handler.post(new Runnable() {
+
+                    public void run() {
+
+                        //get the current timeStamp
+
+                        Calendar calendar = Calendar.getInstance();
+
+                        SimpleDateFormat simpleDateFormat = new
+                                SimpleDateFormat(" HH:mm:ss a");
+
+                        final String strDate =
+                                simpleDateFormat.format(calendar.getTime());
+
+                        timerView.setText(strDate);
+
+                    }
+
+                });
+
+            }
+
+        };
 
     }
 
@@ -214,7 +357,7 @@ public class TestLicense extends Fragment {
 
             try {
                 Thread.sleep(200);
-                _questions = ClientModel.getQuestion(10);
+                _questions = ClientController.getQuestion(Settings.questionNUM);
                 return true;
             }catch (Exception ex)
             {
@@ -236,6 +379,73 @@ public class TestLicense extends Fragment {
             }
 
             nextStep();
+            startTimer();
+
+        }
+    }
+
+    private class UpdateResult extends AsyncTask<StatisticModel,String,Boolean> {
+
+        private int result;
+
+        public UpdateResult(int result){
+            this.result = result;
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+
+
+
+        @Override
+        protected Boolean doInBackground(StatisticModel... params) {
+
+
+            try {
+
+                ClientController.insertNewTestResult(params[0],1);
+                return true;
+            }catch (Exception ex)
+            {
+                Log.e("error","sdsa");
+            }
+            return false;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean message) {
+
+
+            progressBar.setVisibility(View.GONE);
+            if (message == false){
+                Toast.makeText(getActivity(),"Error occured !",Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            String succStr = result > Settings.limitPoint ? "Congratulation!" : "Failed!";
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+            builder1.setMessage(succStr + " Your result is: " + result + " / " + Settings.questionNUM );
+            builder1.setCancelable(true);
+            builder1.setPositiveButton("OKE",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            dialog.cancel();
+                            fragmentsStarter.addClientFragment();
+
+                        }
+                    });
+
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+
 
         }
     }
