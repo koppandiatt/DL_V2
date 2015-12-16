@@ -144,6 +144,9 @@ public class DataAccessLayer {
             }
 
 
+        } catch (SQLException se){
+            Log.e("sqlError", se.getMessage());
+            return -1;
         } catch (Exception ex) {
             Log.e("dberror", ex.getMessage());
             return -1;
@@ -151,9 +154,41 @@ public class DataAccessLayer {
 
     }
 
+    public int UpdateQuestion(int QID, String question, String image){
+        if (_conn == null) {
+            return -1;
+        }
+
+        try {
+
+            String query = "UPDATE questions SET `Text`=?, `Image`=? WHERE ID=?";
+
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = _conn.prepareStatement(query);
+            preparedStmt.setString(1, question);
+            preparedStmt.setString(2, image);
+            preparedStmt.setInt(3, QID);
+
+            // execute the preparedstatement
+            int affectedRows = preparedStmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            else {
+                throw new SQLException("Creating question failed, no ID obtained.");
+            }
 
 
-
+        } catch (SQLException se){
+            Log.e("sqlError", se.getMessage());
+            return -1;
+        } catch (Exception ex) {
+            Log.e("dberror", ex.getMessage());
+            return -1;
+        }
+    }
 
     public int InsertNewAnswers(long QID, String answer, int Correct) {
 
@@ -178,16 +213,70 @@ public class DataAccessLayer {
             if (affectedRows == 0) {
                 throw new SQLException("Creating user failed, no rows affected.");
             }
+            String s = String.valueOf(affectedRows);
+            Log.d("affectedRow", s);
+            return affectedRows;
 
 
-           return affectedRows;
-
-
+        } catch (SQLException se){
+            Log.e("sqlError", se.toString());
+            return -1;
         } catch (Exception ex) {
             Log.e("dberror", ex.getMessage());
             return -1;
         }
+    }
 
+    public void UpdateAnswer(int AID, String answer, int Correct)
+    {
+        if (_conn == null) {
+            return;
+        }
+
+        try {
+
+            String query = "UPDATE answers SET Text=?, Correct=? WHERE ID=?";
+
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = _conn.prepareStatement(query);
+
+            preparedStmt.setString(1, answer);
+            preparedStmt.setInt(2, Correct);
+            preparedStmt.setLong(3, AID);
+
+            // execute the preparedstatement
+            int affectedRows = preparedStmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+            String s = String.valueOf(affectedRows);
+            Log.d("affectedRow", s);
+
+        } catch (SQLException se){
+            Log.e("sqlError", se.toString());
+            return;
+        } catch (Exception ex) {
+            Log.e("dberror", ex.getMessage());
+            return;
+        }
+    }
+
+    public ArrayList<Integer> getAnswerId(int QID){
+        String query = "SELECT * FROM answers WHERE QID=" + QID;
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+        Statement statement = null;
+        try {
+            statement = _conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                ids.add( resultSet.getInt("ID"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ids;
     }
 }
 

@@ -3,7 +3,6 @@ package com.example.koppa.driverlicensev2;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,8 +19,10 @@ import android.widget.Toast;
 
 import Models.IFragmentsStarter;
 import fragments.AdminFragment;
+import fragments.AddQuestionFragment;
 import fragments.ClientFragment;
 import fragments.LoginFragment;
+import fragments.QuestionListFragment;
 import fragments.TestLicense;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IFragmentsStarter {
@@ -140,6 +141,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.commit();
     }
 
+    public void addCUQuestionFragment(){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AddQuestionFragment addQuestionFragment = new AddQuestionFragment();
+        fragmentTransaction.replace(R.id.fragment_container, addQuestionFragment);
+        fragmentTransaction.commit();
+    }
+
+    public void addQuestionListFragment(){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        QuestionListFragment cuQuestionFragment = new QuestionListFragment();
+        fragmentTransaction.replace(R.id.fragment_container, cuQuestionFragment);
+        fragmentTransaction.commit();
+    }
+
     public void addTestLicenseFragment(){
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -157,7 +174,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             case R.id.nav_admin_add:
                 Toast.makeText(this,"Admin ADD", Toast.LENGTH_LONG).show();
+                addCUQuestionFragment();
             break;
+
+            case R.id.nav_admin_edit:
+                addQuestionListFragment();
+                break;
+
             case R.id.nav_client_new_test:
                 Toast.makeText(this,"Start New Test", Toast.LENGTH_LONG).show();
                 addTestLicenseFragment();

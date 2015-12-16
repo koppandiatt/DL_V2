@@ -1,0 +1,196 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="fragments.AddQuestionFragment">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/TV_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentTop="true"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:text="Add/Edit Question"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Question:"
+                android:id="@+id/tv_question"
+                android:layout_below="@+id/TV_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:id="@+id/ET_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="15"
+                android:minLines="4"
+                android:maxLines="10"
+                android:lines="4"
+                android:scrollbars="vertical"
+                android:focusable="true"
+                android:layout_below="@+id/tv_question"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Answer1:"
+                android:id="@+id/tv_answer1"
+                android:layout_below="@+id/ET_question"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:id="@+id/ET_answer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="13"
+                android:minLines="2"
+                android:maxLines="5"
+                android:lines="2"
+                android:scrollbars="vertical"
+                android:focusable="true"
+                android:layout_below="@+id/tv_answer1"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                />
+
+            <CheckBox
+                android:id="@+id/cb_answer1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_answer1"
+                android:layout_alignRight="@+id/ET_answer1"
+                android:layout_marginRight="-40dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Answer2:"
+                android:id="@+id/tv_answer2"
+                android:layout_below="@+id/ET_answer1"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:id="@+id/ET_answer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="13"
+                android:minLines="2"
+                android:maxLines="5"
+                android:lines="2"
+                android:scrollbars="vertical"
+                android:focusable="true"
+                android:layout_below="@+id/tv_answer2"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                />
+
+            <CheckBox
+                android:id="@+id/cb_answer2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_answer2"
+                android:layout_alignRight="@+id/ET_answer2"
+                android:layout_marginRight="-40dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Answer3:"
+                android:id="@+id/tv_answer3"
+                android:layout_below="@+id/ET_answer2"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:id="@+id/ET_answer3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="13"
+                android:minLines="2"
+                android:maxLines="5"
+                android:lines="2"
+                android:scrollbars="vertical"
+                android:focusable="true"
+                android:layout_below="@+id/tv_answer3"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                />
+
+            <CheckBox
+                android:id="@+id/cb_answer3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_answer3"
+                android:layout_alignRight="@+id/ET_answer3"
+                android:layout_marginRight="-40dp"
+                android:layout_marginTop="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Image path:"
+                android:id="@+id/tv_image"
+                android:layout_below="@+id/ET_answer3"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:id="@+id/ET_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="15"
+                android:layout_centerHorizontal="true"
+                android:scrollbars="vertical"
+                android:focusable="true"
+                android:layout_below="@+id/tv_image"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="30dp"
+                />
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ET_image"
+                android:layout_marginTop="15dp"
+                android:layout_centerHorizontal="true"
+                android:text="Add Question"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
