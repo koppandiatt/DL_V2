@@ -40,7 +40,7 @@ import Models.QuestionModel;
 public class LoginFragment extends Fragment {
 
     EditText txtUser, txtPass;
-    Button btnLogin;
+    Button btnLogin, btnRegister;
     ProgressBar progressBar;
 
     View view;
@@ -70,6 +70,18 @@ public class LoginFragment extends Fragment {
                 DoLogin doLogin = new DoLogin();
                 doLogin.execute("");
                 //callSelectedUserFragment(CLIENT);
+            }
+        });
+
+        btnRegister = (Button) view.findViewById(R.id.btnRegister);
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                RegisterFragment cuQuestionFragment = new RegisterFragment();
+                fragmentTransaction.replace(R.id.fragment_container, cuQuestionFragment);
+                fragmentTransaction.commit();
             }
         });
 

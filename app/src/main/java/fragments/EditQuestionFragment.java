@@ -22,11 +22,12 @@ import com.example.koppa.driverlicensev2.R;
 import java.util.ArrayList;
 
 import DataAccessLayer.DataAccessLayer;
+import Tools.BackHandledFragment;
 
 /**
  * Created by Attila on 16.12.2015.
  */
-public class EditQuestionFragment extends Fragment {
+public class EditQuestionFragment extends BackHandledFragment {
 
     private int QID;
     private ArrayList<Integer> ids;
@@ -94,6 +95,21 @@ public class EditQuestionFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public String getTagText() {
+        return null;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        QuestionListFragment editQuestionFragment = new QuestionListFragment();
+        fragmentTransaction.replace(R.id.fragment_container, editQuestionFragment);
+        fragmentTransaction.commit();
+        return true;
+    }
+
     private class CUQuestion extends AsyncTask<String,String,String> {
 
         @Override
@@ -132,7 +148,8 @@ public class EditQuestionFragment extends Fragment {
 
                 return;
             }
-
         }
+
+
     }
 }
