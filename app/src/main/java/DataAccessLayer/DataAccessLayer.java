@@ -96,6 +96,19 @@ public class DataAccessLayer {
 
     }
 
+    public ResultSet select(String query){
+
+        if (_conn == null) {
+            return null;
+        }
+        try {
+            Statement statement = _conn.createStatement();
+            return statement.executeQuery(query);
+        }catch(Exception ex){
+            Log.e("dberror","Error occured at selecting");
+        }
+        return null;
+    }
 
 
     public long InsertNewQuestion(String question, String imgUrl) {
@@ -141,60 +154,6 @@ public class DataAccessLayer {
 
 
 
-    public ArrayList<QuestionModel> getQuestion(int n){
-
-
-        ArrayList<QuestionModel> questionModels = new ArrayList<QuestionModel>();
-
-        try {
-            for (int i = 0; i < n;++i){
-
-                QuestionModel questionModel = new QuestionModel();
-                //"SELECT * FROM questions WHERE Status = 1 ORDER BY RAND() LIMIT 1";
-
-                String query = "SELECT * FROM questions WHERE Status = 1 ORDER BY RAND() LIMIT 1";
-                Statement statement = _conn.createStatement();
-                ResultSet resultSet = statement.executeQuery(query);
-                int QID = -1;
-                if (resultSet.next()) {
-
-
-                    QID = resultSet.getInt("ID");
-                    questionModel.setId(QID);
-                    questionModel.setQuestion(resultSet.getString("Text"));
-                    questionModel.setimgUrl("Image");
-
-                    Log.v("teszt",questionModel.getQuestion());
-
-                }
-
-                Log.v("QID", "" + QID);
-                statement.close();
-
-                query = "SELECT * FROM answers WHERE Status = 1 and QID = '" + QID + "'" ;
-                statement = _conn.createStatement();
-                resultSet = statement.executeQuery(query);
-                int correctIndex = 1;
-
-                while (resultSet.next()) {
-
-                    questionModel.addNewAnswer(resultSet.getString("Text"));
-                    int id = resultSet.getInt("Correct");
-                    Log.v("teszt",resultSet.getString("Text"));
-                    if (id == 1) questionModel.setCorrectAnsIndex(correctIndex);
-                    correctIndex++;
-                }
-
-                questionModels.add(questionModel);
-            }
-        return  questionModels;
-
-        } catch (Exception ex) {
-            Log.e("dberror", ex.getMessage());
-            return null;
-        }
-
-    }
 
     public int InsertNewAnswers(long QID, String answer, int Correct) {
 
