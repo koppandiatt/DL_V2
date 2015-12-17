@@ -21,7 +21,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import Models.ICommonChannel;
 import Models.IFragmentsStarter;
+import Models.UserModel;
 import Tools.BackHandledFragment;
 import Models.Settings;
 import fragments.AdminFragment;
@@ -32,11 +34,13 @@ import fragments.QuestionListFragment;
 import fragments.StatisticFragment;
 import fragments.TestLicense;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IFragmentsStarter, BackHandledFragment.BackHandlerInterface {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IFragmentsStarter, BackHandledFragment.BackHandlerInterface, ICommonChannel {
 
     private BackHandledFragment selectedFragment;
     private static int QUESTIONNUM = 26;
     private static int TESTTIME = 3;
+
+    private UserModel userModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    public void setUserModel(UserModel userModel){
+        this.userModel = userModel;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -134,7 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         StatisticFragment statisticFragment = new StatisticFragment();
-        fragmentTransaction.add(R.id.fragment_container,statisticFragment);
+        statisticFragment.setUserModel(userModel);
+        fragmentTransaction.replace(R.id.fragment_container,statisticFragment);
         fragmentTransaction.commit();
 
     }
@@ -194,6 +203,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         TestLicense testLicense = new TestLicense();
+        testLicense.setUserModel(userModel);
         fragmentTransaction.replace(R.id.fragment_container, testLicense);
         fragmentTransaction.commit();
     }
@@ -212,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id)
         {
             case R.id.nav_admin_add:
-                Toast.makeText(this,"Admin ADD", Toast.LENGTH_LONG).show();
                 addCUQuestionFragment();
             break;
 
@@ -221,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_client_new_test:
-                Toast.makeText(this,"Start New Test", Toast.LENGTH_LONG).show();
                 addTestLicenseFragment();
                 break;
             case R.id.nav_admin_sign_out:
@@ -242,5 +250,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void setSelectedFragment(BackHandledFragment backHandledFragment) {
         this.selectedFragment = backHandledFragment;
+    }
+
+    @Override
+    public void setUser(UserModel userModel) {
+        this.userModel = userModel;
     }
 }

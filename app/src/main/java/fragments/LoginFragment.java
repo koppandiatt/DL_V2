@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import java.util.zip.Inflater;
 
 import DataAccessLayer.DataAccessLayer;
+import Models.ICommonChannel;
 import Models.IFragmentsStarter;
 import Models.QuestionModel;
+import Models.UserModel;
 
 /**
  * Created by koppa on 26.11.2015.
@@ -49,6 +51,9 @@ public class LoginFragment extends Fragment {
     private static final int CLIENT = 223;
 
     private IFragmentsStarter _fragmentStarter = null;
+    private ICommonChannel _commonChannel = null;
+
+
 
     public LoginFragment(){}
 
@@ -172,17 +177,16 @@ public class LoginFragment extends Fragment {
                     message = "Please enter the UserName and Password";
                 }else{
 
-                   // DataAccessLayer.getInstance();
-                    role = DataAccessLayer.getInstance().getUserRole(userid.trim(),userpass.trim());
-                   // long QID = DataAccessLayer.getInstance().InsertNewQuestion("dasdasd","asfasfas");
-                   // int arows = DataAccessLayer.getInstance().InsertNewAnswers(QID, "lofasz", 1);
-                   // readData();
-                   // Log.v("TEMP ", arows + "");
-                    if (role == null){
+                    UserModel userModel  = DataAccessLayer.getInstance().getUser(userid.trim(),userpass.trim());
+
+                    if (userModel.getRole() == null){
                         message = "Wrong credentials!";
                     }else{
                         if (role.equals(DataAccessLayer.ERROR))  message = "Error occured in connection!";
                     }
+
+                    _commonChannel.setUser(userModel);
+
 
                 }
                 return message;
@@ -225,6 +229,7 @@ public class LoginFragment extends Fragment {
         super.onAttach(activity);
         try {
            _fragmentStarter = (IFragmentsStarter) activity;
+            _commonChannel = (ICommonChannel) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");

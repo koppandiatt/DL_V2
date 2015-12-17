@@ -18,7 +18,34 @@ public class ClientController {
 
     private static final String QRANDOMQUESTION  = "SELECT * FROM questions WHERE Status = 1 ORDER BY RAND() LIMIT 1";
 
-    public static ArrayList<QuestionModel> getQuestion(int n){
+
+    public static QuestionModel getQuestion(){
+
+
+        try{
+
+            QuestionModel questionModel = new QuestionModel();
+            //"SELECT * FROM questions WHERE Status = 1 ORDER BY RAND() LIMIT 1";
+            ResultSet resultSet = DataAccessLayer.getInstance().select(QRANDOMQUESTION);
+
+            if (resultSet.next()) {
+
+                questionModel.setId(resultSet.getInt("ID"));
+                questionModel.setQuestion(resultSet.getString("Text"));
+                questionModel.setimgUrl(resultSet.getString("Image"));
+
+            }
+            return questionModel;
+
+        }catch(Exception ex){
+
+        }
+
+        return null;
+    }
+
+
+    public static ArrayList<QuestionModel> getQuestions(int n){
 
 
 
@@ -28,29 +55,16 @@ public class ClientController {
         try {
             for (int i = 0; i < n;++i){
 
-                QuestionModel questionModel = new QuestionModel();
+                QuestionModel questionModel = getQuestion();
                 //"SELECT * FROM questions WHERE Status = 1 ORDER BY RAND() LIMIT 1";
 
-                ResultSet resultSet = DataAccessLayer.getInstance().select(QRANDOMQUESTION);
-                int QID = -1;
-                if (resultSet.next()) {
 
+                int QID = questionModel.getId();
 
-
-                    QID = resultSet.getInt("ID");
-                    questionModel.setId(QID);
-                    questionModel.setQuestion(resultSet.getString("Text"));
-                    questionModel.setimgUrl(resultSet.getString("Image"));
-
-                    Log.v("teszt", questionModel.getQuestion());
-
-                }
-
-                Log.v("QID", "" + QID);
 
                 String query = "SELECT * FROM answers WHERE Status = 1 and QID = '" + QID + "'" ;
 
-                resultSet = DataAccessLayer.getInstance().select(query);
+                ResultSet resultSet = DataAccessLayer.getInstance().select(query);
                 int correctIndex = 1;
 
                 while (resultSet.next()) {

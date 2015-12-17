@@ -2,13 +2,10 @@ package fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +21,7 @@ import com.example.koppa.driverlicensev2.R;
 import java.util.ArrayList;
 
 import Controller.ClientController;
-import Models.ClientModel;
-import Models.Settings;
+import Models.UserModel;
 import Models.StatisticModel;
 import Tools.StatisticListAdapter;
 
@@ -37,7 +33,7 @@ public class StatisticFragment extends Fragment {
     private StatisticListAdapter statisticListAdapter;
     private ProgressBar progressBar;
 
-    private ClientModel clientModel;
+    private UserModel userModel;
     ArrayList<StatisticModel> statistics;
 
     @Override
@@ -69,8 +65,8 @@ public class StatisticFragment extends Fragment {
         return view;
     }
 
-    public void setClientModel(ClientModel clientModel){
-        this.clientModel = clientModel;
+    public void setUserModel(UserModel userModel){
+        this.userModel = userModel;
     }
 
     private void detailView(StatisticModel statisticModel){
@@ -92,7 +88,7 @@ public class StatisticFragment extends Fragment {
         textEarnedPoints.setText(String.valueOf(statisticModel.getReachedPoints()));
         textMaxPoints.setText(String.valueOf(statisticModel.getMaxPoints()));
         textLimitPoints.setText(String.valueOf(statisticModel.getMinReachPoints()));
-        textSuccess.setText(String.valueOf(statisticModel.getSuccess()));
+        textSuccess.setText(String.valueOf(statisticModel.getSuccess() > 0 ? true : false));
 
         Button dialogButton = (Button) dialog.findViewById(R.id.DVokebtn);
         // if button is clicked, close the custom dialog
@@ -139,7 +135,7 @@ public class StatisticFragment extends Fragment {
 
             try {
                 Thread.sleep(200);
-                statistics = ClientController.getClientStatistic(2);
+                statistics = ClientController.getClientStatistic(userModel.getId());
 
                 return true;
             }catch (Exception ex)

@@ -3,13 +3,11 @@ package fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +29,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import Controller.ClientController;
-import DataAccessLayer.DataAccessLayer;
-import Models.ClientModel;
+import Models.UserModel;
 import Models.IFragmentsStarter;
 import Models.QuestionModel;
 import Models.Settings;
@@ -62,7 +59,9 @@ public class TestLicense extends Fragment {
 
     private TextView pageNumView;
 
-    private ClientModel clientModel;
+    private UserModel userModel;
+
+    private RelativeLayout mainView;
 
     private String startDate;
 
@@ -103,11 +102,14 @@ public class TestLicense extends Fragment {
 
     }
 
-    public void setClientModel( ClientModel clientModel){
-        this.clientModel = clientModel;
+    public void setUserModel(UserModel userModel){
+        this.userModel = userModel;
     }
 
     private void initializeGUIReferences(View view){
+
+        mainView = (RelativeLayout) view.findViewById(R.id.testMainContainer);
+        mainView.setVisibility(View.INVISIBLE);
 
         btnNext = (Button) view.findViewById(R.id.BTNtestnext);
         Button btnBack = (Button) view.findViewById(R.id.BTNtestback);
@@ -359,7 +361,7 @@ public class TestLicense extends Fragment {
 
             try {
                 Thread.sleep(200);
-                _questions = ClientController.getQuestion(Settings.questionNUM);
+                _questions = ClientController.getQuestions(Settings.questionNUM);
                 return true;
             }catch (Exception ex)
             {
@@ -375,6 +377,7 @@ public class TestLicense extends Fragment {
 
 
             progressBar.setVisibility(View.GONE);
+            mainView.setVisibility(View.VISIBLE);
             if (message == false){
                 Toast.makeText(getActivity(),"Error occured !",Toast.LENGTH_LONG).show();
                 return;
@@ -416,7 +419,7 @@ public class TestLicense extends Fragment {
 
             try {
 
-                ClientController.insertNewTestResult(params[0],2);
+                ClientController.insertNewTestResult(params[0],userModel.getId());
                 return true;
             }catch (Exception ex)
             {

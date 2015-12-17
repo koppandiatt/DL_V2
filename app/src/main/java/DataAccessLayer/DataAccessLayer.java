@@ -1,6 +1,5 @@
 package DataAccessLayer;
 
-import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
 
@@ -12,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import Models.QuestionModel;
+import Models.UserModel;
 
 /**
  * Created by koppa on 26.11.2015.
@@ -155,6 +154,34 @@ public class DataAccessLayer {
             return;
         }
     }
+
+    public UserModel getUser(String username, String password){
+
+        if (_conn == null) {
+            return null ;
+        }
+
+        try {
+            String query = "SELECT * FROM users WHERE User='" + username + "' and Password='" + password + "'";
+            Statement statement = _conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            UserModel userModel = new UserModel();  //Id, User , Password, Role
+            if (resultSet.next()) {
+
+                userModel.setId(Integer.parseInt(resultSet.getString("Id")));
+                userModel.setRole(resultSet.getString("Role"));
+                return userModel;
+
+            } else {
+                return null;
+
+            }
+        } catch (Exception ex) {
+            Log.e("dberror", ex.getMessage());
+            return null;
+        }
+    }
+
 
     public long InsertNewQuestion(String question, String imgUrl) {
 

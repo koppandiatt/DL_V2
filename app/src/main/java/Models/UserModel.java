@@ -11,22 +11,24 @@ import DataAccessLayer.DataAccessLayer;
 /**
  * Created by kovac on 12/14/2015.
  */
-public class ClientModel {
+public class UserModel {
 
     private long id;
 
     private String firstname;
 
-    private String fastname;
+    private String lastname;
 
     private String email;
+
+    private String role;
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setFastname(String fastname) {
-        this.fastname = fastname;
+    public void setLastname(String fastname) {
+        this.lastname = fastname;
     }
 
     public void setFirstname(String firstname) {
@@ -45,11 +47,19 @@ public class ClientModel {
         return email;
     }
 
-    public String getFastname() {
-        return fastname;
+    public String getLastname() {
+        return lastname;
     }
 
     public String getFirstname() {
         return firstname;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
