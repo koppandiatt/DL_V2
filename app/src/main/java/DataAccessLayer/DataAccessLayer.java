@@ -68,7 +68,19 @@ public class DataAccessLayer {
     }
 
 
+    public void insert(String query){
 
+        if (_conn == null) {
+            return;
+        }
+        try {
+            Statement statement = _conn.createStatement();
+            statement.executeQuery(query);
+        }catch(Exception ex){
+            Log.e("dberror","Error occured at selecting");
+        }
+        return;
+    }
 
 
     public String getUserRole(String username, String password) {
