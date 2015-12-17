@@ -192,6 +192,29 @@ public class DataAccessLayer {
         }
     }
 
+    public ArrayList<Integer> getSettings(){
+
+        if (_conn == null) { return null; }
+
+        ArrayList<Integer> settings = new ArrayList<Integer>();
+        try{
+            String query = "SELECT * FROM settings WHERE ID=1";
+            ResultSet resultSet = select(query);
+            if (resultSet.next()){
+                settings.add(resultSet.getInt("NrQ"));
+                settings.add(resultSet.getInt("Time"));
+                settings.add(resultSet.getInt("Limit"));
+            }
+            return settings;
+        }catch (Exception ex){
+
+        }
+        return null;
+
+
+
+    }
+
 
     public long InsertNewQuestion(String question, String imgUrl) {
 

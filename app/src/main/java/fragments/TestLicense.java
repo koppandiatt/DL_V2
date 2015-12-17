@@ -74,6 +74,8 @@ public class TestLicense extends Fragment {
 
     private IFragmentsStarter fragmentsStarter;
 
+    private boolean timeExpired = false;
+
     private long startTime = 0L;
 
     long timeInMilliseconds = 0L;
@@ -128,6 +130,8 @@ public class TestLicense extends Fragment {
         imgView = (ImageView) view.findViewById(R.id.IVtestimg);
 
         btnNext.setText("Next");
+
+        btnBack.setText("Back");
 
         pageNumView.setText("0/" + Settings.questionNUM);
 
@@ -235,10 +239,11 @@ public class TestLicense extends Fragment {
         }
     }
 
-    public int checkAnswerIsCorrect(){
+    private int checkAnswerIsCorrect(){
         int countCorrect = 0;
 
         Log.v("lofasz",_answers.size() + "");
+
 
         for (int i = 0; i < _questions.size(); ++i){
             boolean isCorret = true;
@@ -253,6 +258,34 @@ public class TestLicense extends Fragment {
         return countCorrect;
 
 
+    }
+
+
+    private void resultDialog(int result){
+        String succStr;
+        if (timeExpired == false){
+            succStr = result > Settings.limitPoint ? "Congratulation!" : "Failed!";
+            succStr += " Your result is: " + result + " / " + Settings.questionNUM;
+        }else{
+            succStr = "Failed, Time expired!";
+        }
+
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+        builder1.setMessage(succStr);
+        builder1.setCancelable(true);
+        builder1.setPositiveButton("OKE",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.cancel();
+                        fragmentsStarter.addClientFragment();
+
+                    }
+                });
+
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 
     private void winInformationDIalog(){
@@ -275,6 +308,8 @@ public class TestLicense extends Fragment {
 
 
     }
+
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -339,8 +374,15 @@ public class TestLicense extends Fragment {
                         int secs = (int) (updatedTime / 1000);
                         int mins = secs / 60;
                         secs = secs % 60;
+                        if (mins == Settings.time){
+                            timeExpired = true;
+                            stoptimertask();
+                            resultDialog(0);
+                            return;
+
+                        }
                         int milliseconds = (int) (updatedTime % 1000);
-                        timerView.setText("" + mins + ":" + String.format("%02d", secs));
+                        timerView.setText("" + mins + ":" + String.format("%02d", secs) + "/" + Settings.time + ":00");
 
                     }
 
@@ -367,7 +409,7 @@ public class TestLicense extends Fragment {
 
 
             try {
-                Thread.sleep(200);
+                //Thread.sleep(200);
                 _questions = ClientController.getQuestions(Settings.questionNUM);
                 return true;
             }catch (Exception ex)
@@ -449,23 +491,8 @@ public class TestLicense extends Fragment {
                 return;
             }
 
-            String succStr = result > Settings.limitPoint ? "Congratulation!" : "Failed!";
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
-            builder1.setMessage(succStr + " Your result is: " + result + " / " + Settings.questionNUM );
-            builder1.setCancelable(true);
-            builder1.setPositiveButton("OKE",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+            resultDialog(result);
 
-                            dialog.cancel();
-                            fragmentsStarter.addClientFragment();
-
-                        }
-                    });
-
-
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
 
 
         }

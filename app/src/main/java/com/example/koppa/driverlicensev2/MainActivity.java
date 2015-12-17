@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -48,8 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Settings.questionNUM = 10;
-        Settings.limitPoint = 7;
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setVisibility(View.GONE);
@@ -76,8 +76,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         addLoginFragment();
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -242,9 +245,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_admin_sign_out:
             case R.id.nav_client_sign_out:
                 signout();
+                break;
             case R.id.nav_client_statistics:
                 addStatisticFragment();
-
+                break;
+            case R.id.nav_client_practice:
+                Toast.makeText(this,"sadas",Toast.LENGTH_LONG).show();
+                addPracticeFragment();
+                break;
             default:
                 break;
         }

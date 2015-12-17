@@ -3,10 +3,14 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_client_new_test" android:icon="@android:drawable/ic_menu_directions"
             android:title="New test" />
+        <item android:id="@+id/nav_client_practice" android:icon="@android:drawable/ic_menu_agenda"
+            android:title="Practice" />
         <item android:id="@+id/nav_client_language" android:icon="@android:drawable/ic_menu_myplaces"
             android:title="Language" />
         <item android:id="@+id/nav_client_statistics" android:icon="@android:drawable/ic_menu_agenda"
             android:title="Statistics" />
+
+
     </group>
 
     <item android:title="Profile">

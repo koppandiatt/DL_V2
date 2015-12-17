@@ -35,6 +35,8 @@ public class ClientController {
                 questionModel.setimgUrl(resultSet.getString("Image"));
 
             }
+
+
             return questionModel;
 
         }catch(Exception ex){

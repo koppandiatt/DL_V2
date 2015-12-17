@@ -1,5 +1,6 @@
 package fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -63,7 +64,7 @@ public class PracticeFragment extends Fragment {
 
     private int countCorrect = 0;
 
-    private int countAnsw = 0;
+    private int countAnsw = 1;
 
 
     Timer timer;
@@ -73,12 +74,6 @@ public class PracticeFragment extends Fragment {
     final Handler handler = new Handler();
 
     private IFragmentsStarter fragmentsStarter;
-
-    private long startTime = 0L;
-
-    long timeInMilliseconds = 0L;
-    long timeSwapBuff = 0L;
-    long updatedTime = 0L;
 
     public PracticeFragment(){}
 
@@ -95,6 +90,8 @@ public class PracticeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_test_license, container, false);
         initializeGUIReferences(view);
+        GetQuestion getQuestion = new GetQuestion();
+        getQuestion.execute();
 
         return view;
     }
@@ -115,11 +112,22 @@ public class PracticeFragment extends Fragment {
 
         btnNext.setText("Next");
 
+        btnBack.setText("Quit");
+
         btnNext.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 nextStep();
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                fragmentsStarter.addClientFragment();
+
             }
         });
 
@@ -136,8 +144,10 @@ public class PracticeFragment extends Fragment {
     }
 
     private void nextStep(){
+        checkAnswerIsCorrect();
        GetQuestion getQuestion = new GetQuestion();
         getQuestion.execute();
+
     }
 
 
@@ -154,9 +164,9 @@ public class PracticeFragment extends Fragment {
             }
         if (isCorret) {
                 ++countCorrect;
-                timerView.setText(countCorrect + "/" + countAnsw);
-                pageNumView.setText(countAnsw);
         }
+        timerView.setText(countCorrect + "/" + (countAnsw ));
+        pageNumView.setText(countAnsw + "");
 
 
     }
@@ -177,9 +187,14 @@ public class PracticeFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            fragmentsStarter = (IFragmentsStarter) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 
     @Override
@@ -188,62 +203,7 @@ public class PracticeFragment extends Fragment {
 
     }
 
-    public void startTimer() {
 
-        timer = new Timer();
-
-        initializeTimerTask();
-
-        timer.schedule(timerTask, 5, 1000);
-    }
-
-
-
-    public void stoptimertask() {
-
-        if (timer != null) {
-
-            timer.cancel();
-
-            timer = null;
-        }
-    }
-
-
-
-    public void initializeTimerTask() {
-
-        timerTask = new TimerTask() {
-
-            public void run() {
-
-
-
-
-                handler.post(new Runnable() {
-
-                    public void run() {
-
-                        //get the current timeStamp
-
-                        timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
-
-                        updatedTime = timeSwapBuff + timeInMilliseconds;
-                        int secs = (int) (updatedTime / 1000);
-                        int mins = secs / 60;
-                        secs = secs % 60;
-                        int milliseconds = (int) (updatedTime % 1000);
-                        timerView.setText("" + mins + ":" + String.format("%02d", secs));
-
-                    }
-
-                });
-
-            }
-
-        };
-
-    }
 
 
     private class GetQuestion extends AsyncTask<String,String,Boolean> {
@@ -259,8 +219,11 @@ public class PracticeFragment extends Fragment {
 
 
             try {
-                Thread.sleep(200);
-                _question = ClientController.getQuestion();
+
+                _question = (ClientController.getQuestions(1)).get(0);
+
+
+                Log.v("question",_question.getAnswers().size() + "");
                 return true;
             }catch (Exception ex)
             {
@@ -281,8 +244,13 @@ public class PracticeFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error occured !", Toast.LENGTH_LONG).show();
                 return;
             }
-            if (countAnsw == 0)  startTime = SystemClock.uptimeMillis();
+            if (countAnsw == 1) {
+
+                timerView.setText(countCorrect + "/" + (countAnsw ));
+                pageNumView.setText((countAnsw ) + "");
+            }
             countAnsw++;
+
             fillQuestionGUI();
 
 

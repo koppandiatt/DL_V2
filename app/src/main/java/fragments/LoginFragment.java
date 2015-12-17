@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,12 +29,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.zip.Inflater;
 
 import DataAccessLayer.DataAccessLayer;
 import Models.ICommonChannel;
 import Models.IFragmentsStarter;
 import Models.QuestionModel;
+import Models.Settings;
 import Models.UserModel;
 
 /**
@@ -178,6 +181,11 @@ public class LoginFragment extends Fragment {
                 }else{
 
                     UserModel userModel  = DataAccessLayer.getInstance().getUser(userid.trim(),userpass.trim());
+                    ArrayList<Integer>  settings = DataAccessLayer.getInstance().getSettings();
+                    Settings.questionNUM = settings.get(0);
+                    Settings.time = settings.get(1);
+                    Settings.limitPoint = settings.get(2);
+                    Log.v("settings",settings.get(0) + " " + settings.get(1) + " " + settings.get(2)  );
 
                     if (userModel == null){
                         message = "Wrong credentials!";
