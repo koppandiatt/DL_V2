@@ -1,13 +1,99 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="fragments.SettingsFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/TV_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:text="Settings"
+        />
 
-</FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Number of questions:"
+        android:id="@+id/tv_nrq"
+        android:layout_below="@+id/TV_title"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="10dp"/>
+
+    <EditText
+        android:id="@+id/ET_nrq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:inputType="number"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="vertical"
+        android:focusable="true"
+        android:layout_below="@+id/tv_nrq"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Time of exam:"
+        android:id="@+id/tv_time"
+        android:layout_below="@+id/ET_nrq"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <EditText
+        android:id="@+id/ET_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:inputType="number"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="vertical"
+        android:focusable="true"
+        android:layout_below="@+id/tv_time"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Limit points:"
+        android:id="@+id/tv_limit"
+        android:layout_below="@+id/ET_time"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <EditText
+        android:id="@+id/ET_limit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:inputType="number"
+        android:layout_centerHorizontal="true"
+        android:scrollbars="vertical"
+        android:focusable="true"
+        android:layout_below="@+id/tv_limit"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ET_limit"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:text="Save settings"/>
+
+</RelativeLayout>

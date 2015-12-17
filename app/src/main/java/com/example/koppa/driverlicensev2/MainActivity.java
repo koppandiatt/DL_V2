@@ -33,6 +33,7 @@ import fragments.ClientFragment;
 import fragments.LoginFragment;
 import fragments.PracticeFragment;
 import fragments.QuestionListFragment;
+import fragments.SettingsFragment;
 import fragments.StatisticFragment;
 import fragments.TestLicense;
 
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         StatisticFragment statisticFragment = new StatisticFragment();
         statisticFragment.setUserModel(userModel);
-        fragmentTransaction.replace(R.id.fragment_container,statisticFragment);
+        fragmentTransaction.replace(R.id.fragment_container, statisticFragment);
         fragmentTransaction.commit();
 
     }
@@ -258,10 +259,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_admin_users:
                 addUserListFragment();
                 break;
-                break;
             case R.id.nav_client_practice:
-                Toast.makeText(this,"sadas",Toast.LENGTH_LONG).show();
                 addPracticeFragment();
+                break;
+
+            case R.id.nav_admin_settings:
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                SettingsFragment settingsFragment = new SettingsFragment();
+                fragmentTransaction.replace(R.id.fragment_container, settingsFragment);
+                fragmentTransaction.commit();
                 break;
             default:
                 break;

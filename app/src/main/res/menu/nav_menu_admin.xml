@@ -14,6 +14,8 @@
         <menu>
             <item android:id="@+id/nav_admin_users" android:icon="@android:drawable/ic_menu_my_calendar"
                 android:title="Users" />
+            <item android:id="@+id/nav_admin_settings" android:icon="@android:drawable/ic_menu_manage"
+                android:title="Settings" />
         </menu>
     </item>
 

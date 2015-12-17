@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DriverLicenseV2</string>
+    <string name="add_new_admin">Kérdés hozzáadása</string>
+    <string name="edit_admin">Kérdés modosítása</string>
+    <string name="sign_out">Kijelentkezés</string>
+    <string name="users_admin">Felhasználok</string>
+    <string name="question">Kérdés</string>
+    <string name="answer">Válasz</string>
+    <string name="image_path">Kép elérési utja</string>
+    <string name="add">Hozzáad</string>
+    <string name="add_edit">Hozzáad/Modosit kérdést</string>
+    <string name="questions">Kérdések</string>
+    <string name="save">Modositások mentése</string>
+    <string name="users">Felhasználok</string>
+</resources>
