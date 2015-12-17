@@ -29,6 +29,7 @@ import fragments.AddQuestionFragment;
 import fragments.ClientFragment;
 import fragments.LoginFragment;
 import fragments.QuestionListFragment;
+import fragments.StatisticFragment;
 import fragments.TestLicense;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IFragmentsStarter, BackHandledFragment.BackHandlerInterface {
@@ -128,6 +129,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.commit();
     }
 
+    public void addStatisticFragment(){
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        StatisticFragment statisticFragment = new StatisticFragment();
+        fragmentTransaction.add(R.id.fragment_container,statisticFragment);
+        fragmentTransaction.commit();
+
+    }
+
     public void addClientFragment(){
         Fragment frag = null;
         FragmentManager fragmentManager = getFragmentManager();
@@ -216,6 +227,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_admin_sign_out:
             case R.id.nav_client_sign_out:
                 signout();
+            case R.id.nav_client_statistics:
+                addStatisticFragment();
+
             default:
                 break;
         }

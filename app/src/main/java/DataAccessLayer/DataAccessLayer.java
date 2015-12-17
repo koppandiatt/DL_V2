@@ -122,6 +122,20 @@ public class DataAccessLayer {
         return null;
     }
 
+    public void insert(String query){
+
+        if (_conn == null) {
+            return;
+        }
+        try {
+            Statement statement = _conn.createStatement();
+            statement.executeUpdate(query);
+        }catch(Exception ex){
+            Log.e("dberror","Error occured at selecting" + ex.getMessage());
+        }
+        return;
+    }
+
     public void addUser(String name, String pass)
     {
         if (_conn == null) {
@@ -153,7 +167,6 @@ public class DataAccessLayer {
             return;
         }
     }
-
 
     public long InsertNewQuestion(String question, String imgUrl) {
 

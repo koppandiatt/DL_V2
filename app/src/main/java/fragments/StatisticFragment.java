@@ -1,19 +1,44 @@
 package fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.koppa.driverlicensev2.R;
 
+import java.util.ArrayList;
+
+import Controller.ClientController;
+import Models.ClientModel;
+import Models.Settings;
+import Models.StatisticModel;
+import Tools.StatisticListAdapter;
 
 
 public class StatisticFragment extends Fragment {
 
+
+    private ListView listView;
+    private StatisticListAdapter statisticListAdapter;
+    private ProgressBar progressBar;
+
+    private ClientModel clientModel;
+    ArrayList<StatisticModel> statistics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,9 +50,61 @@ public class StatisticFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_statistic, container, false);
+        View view = inflater.inflate(R.layout.fragment_statistic, container, false);
+        listView = (ListView) view.findViewById(R.id.statlist);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                detailView(statistics.get(position));
+            }
+        });
+
+
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.mainprogressBar);
+        StatisData statisData = new StatisData();
+        statisData.execute();
+        return view;
     }
 
+    public void setClientModel(ClientModel clientModel){
+        this.clientModel = clientModel;
+    }
+
+    private void detailView(StatisticModel statisticModel){
+       final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.detaildialog_layout);
+
+        dialog.setTitle("Detail Window!");
+
+        // set the custom dialog components - text, image and button
+        TextView textDate = (TextView) dialog.findViewById(R.id.DVdate);
+        TextView textTime = (TextView) dialog.findViewById(R.id.DVtime);
+        TextView textEarnedPoints = (TextView) dialog.findViewById(R.id.DVearnedPoints);
+        TextView textMaxPoints = (TextView) dialog.findViewById(R.id.DVmaxPoints);
+        TextView textLimitPoints = (TextView) dialog.findViewById(R.id.DVlimitPoints);
+        TextView textSuccess = (TextView) dialog.findViewById(R.id.DVsuccess);
+
+        textDate.setText(statisticModel.getDate());
+        textTime.setText(statisticModel.getTime());
+        textEarnedPoints.setText(String.valueOf(statisticModel.getReachedPoints()));
+        textMaxPoints.setText(String.valueOf(statisticModel.getMaxPoints()));
+        textLimitPoints.setText(String.valueOf(statisticModel.getMinReachPoints()));
+        textSuccess.setText(String.valueOf(statisticModel.getSuccess()));
+
+        Button dialogButton = (Button) dialog.findViewById(R.id.DVokebtn);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
 
 
     @Override
@@ -42,19 +119,50 @@ public class StatisticFragment extends Fragment {
 
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    private void initializeListView(){
+        Log.v("size", statistics.size() + "");
+        statisticListAdapter = new StatisticListAdapter(getActivity(),statistics);
+        listView.setAdapter(statisticListAdapter);
+    }
+
+    private class StatisData extends AsyncTask<String,String,Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+
+            try {
+                Thread.sleep(200);
+                statistics = ClientController.getClientStatistic(2);
+
+                return true;
+            }catch (Exception ex)
+            {
+                Log.e("error", "Error occured at the get question!");
+            }
+            return false;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean message) {
+
+
+            progressBar.setVisibility(View.GONE);
+            if (message == false){
+                Toast.makeText(getActivity(), "Error occured !", Toast.LENGTH_LONG).show();
+                return;
+            }
+            initializeListView();
+
+        }
     }
 
 }

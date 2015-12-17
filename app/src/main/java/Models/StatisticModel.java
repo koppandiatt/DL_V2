@@ -7,6 +7,8 @@ public class StatisticModel {
 
     private String time;
 
+    private String date;
+
     private int maxPoints;
 
     private int reachedPoints;
@@ -53,5 +55,13 @@ public class StatisticModel {
 
     public void setSuccess(int success) {
         this.success = success;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

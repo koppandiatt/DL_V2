@@ -64,6 +64,8 @@ public class TestLicense extends Fragment {
 
     private ClientModel clientModel;
 
+    private String startDate;
+
     Timer timer;
 
     TimerTask timerTask;
@@ -248,13 +250,14 @@ public class TestLicense extends Fragment {
 
 
 
-
         int resultCorrect = checkAnswerIsCorrect();
+        Log.v("win", resultCorrect + "");
         StatisticModel statisticModel = new StatisticModel();
         statisticModel.setMaxPoints(Settings.questionNUM);
         statisticModel.setReachedPoints(resultCorrect);
         statisticModel.setMinReachPoints(Settings.limitPoint);
         statisticModel.setTime(timerView.getText().toString());
+        statisticModel.setDate(startDate);
 
         int success = resultCorrect > Settings.limitPoint ? 1 : 0;
 
@@ -326,8 +329,7 @@ public class TestLicense extends Fragment {
                         SimpleDateFormat simpleDateFormat = new
                                 SimpleDateFormat(" HH:mm:ss a");
 
-                        final String strDate =
-                                simpleDateFormat.format(calendar.getTime());
+                        final String strDate = simpleDateFormat.format(calendar.getTime());
 
                         timerView.setText(strDate);
 
@@ -378,6 +380,13 @@ public class TestLicense extends Fragment {
                 return;
             }
 
+            Calendar calendar = Calendar.getInstance();
+
+            SimpleDateFormat simpleDateFormat = new
+                    SimpleDateFormat("dd:MMMM:yyyy HH:mm:ss a");
+
+            startDate = simpleDateFormat.format(calendar.getTime());
+
             nextStep();
             startTimer();
 
@@ -407,7 +416,7 @@ public class TestLicense extends Fragment {
 
             try {
 
-                ClientController.insertNewTestResult(params[0],1);
+                ClientController.insertNewTestResult(params[0],2);
                 return true;
             }catch (Exception ex)
             {
