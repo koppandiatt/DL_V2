@@ -28,6 +28,7 @@ import Tools.BackHandledFragment;
 import Models.Settings;
 import fragments.AdminFragment;
 import fragments.AddQuestionFragment;
+import fragments.AdminStatisticFragment;
 import fragments.ClientFragment;
 import fragments.LoginFragment;
 import fragments.PracticeFragment;
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         StatisticFragment statisticFragment = new StatisticFragment();
         statisticFragment.setUserModel(userModel);
-        fragmentTransaction.replace(R.id.fragment_container,statisticFragment);
+        fragmentTransaction.replace(R.id.fragment_container, statisticFragment);
         fragmentTransaction.commit();
 
     }
@@ -206,6 +207,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentTransaction.commit();
     }
 
+    public void addUserListFragment(){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AdminStatisticFragment cuQuestionFragment = new AdminStatisticFragment();
+        fragmentTransaction.replace(R.id.fragment_container, cuQuestionFragment);
+        fragmentTransaction.commit();
+    }
+
     public void addTestLicenseFragment(){
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -242,9 +251,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_admin_sign_out:
             case R.id.nav_client_sign_out:
                 signout();
+                break;
             case R.id.nav_client_statistics:
                 addStatisticFragment();
-
+                break;
+            case R.id.nav_admin_users:
+                addUserListFragment();
+                break;
             default:
                 break;
         }
