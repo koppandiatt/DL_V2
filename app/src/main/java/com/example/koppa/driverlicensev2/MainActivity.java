@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static int QUESTIONNUM = 26;
     private static int TESTTIME = 3;
 
+    private NavigationView navigationView;
+
     private UserModel userModel;
 
     @Override
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         StatisticFragment statisticFragment = new StatisticFragment();
         statisticFragment.setUserModel(userModel);
-        fragmentTransaction.replace(R.id.fragment_container,statisticFragment);
+        fragmentTransaction.replace(R.id.fragment_container, statisticFragment);
         fragmentTransaction.commit();
 
     }
@@ -160,13 +162,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment frag = null;
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        NavigationView navigationView;
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.inflateMenu(R.menu.nav_menu_client);
+
+        if (navigationView == null){
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.inflateMenu(R.menu.nav_menu_client);
+            toolbar.setVisibility(View.VISIBLE);
+        }
+
         frag = new ClientFragment();
-        toolbar.setVisibility(View.VISIBLE);
+
 
         fragmentTransaction.replace(R.id.fragment_container, frag);
         fragmentTransaction.addToBackStack(null);
@@ -258,9 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_admin_users:
                 addUserListFragment();
                 break;
-                break;
             case R.id.nav_client_practice:
-                Toast.makeText(this,"sadas",Toast.LENGTH_LONG).show();
                 addPracticeFragment();
                 break;
             default:

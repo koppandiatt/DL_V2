@@ -326,6 +326,7 @@ public class TestLicense extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        stoptimertask();
 
     }
 
