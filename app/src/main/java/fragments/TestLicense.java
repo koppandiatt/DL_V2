@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +73,12 @@ public class TestLicense extends Fragment {
     final Handler handler = new Handler();
 
     private IFragmentsStarter fragmentsStarter;
+
+    private long startTime = 0L;
+
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedTime = 0L;
 
     public TestLicense() {
 
@@ -326,14 +333,14 @@ public class TestLicense extends Fragment {
 
                         //get the current timeStamp
 
-                        Calendar calendar = Calendar.getInstance();
+                        timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
 
-                        SimpleDateFormat simpleDateFormat = new
-                                SimpleDateFormat(" HH:mm:ss a");
-
-                        final String strDate = simpleDateFormat.format(calendar.getTime());
-
-                        timerView.setText(strDate);
+                        updatedTime = timeSwapBuff + timeInMilliseconds;
+                        int secs = (int) (updatedTime / 1000);
+                        int mins = secs / 60;
+                        secs = secs % 60;
+                        int milliseconds = (int) (updatedTime % 1000);
+                        timerView.setText("" + mins + ":" + String.format("%02d", secs));
 
                     }
 
@@ -391,7 +398,9 @@ public class TestLicense extends Fragment {
             startDate = simpleDateFormat.format(calendar.getTime());
 
             nextStep();
+            startTime = SystemClock.uptimeMillis();
             startTimer();
+
 
         }
     }

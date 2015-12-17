@@ -30,6 +30,7 @@ import fragments.AdminFragment;
 import fragments.AddQuestionFragment;
 import fragments.ClientFragment;
 import fragments.LoginFragment;
+import fragments.PracticeFragment;
 import fragments.QuestionListFragment;
 import fragments.StatisticFragment;
 import fragments.TestLicense;
@@ -126,7 +127,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void addPracticeFragment(){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        PracticeFragment practiceFragment = new PracticeFragment();
+        fragmentTransaction.replace(R.id.fragment_container, practiceFragment);
+        fragmentTransaction.commit();
+    }
 
 
     public void addLoginFragment(){

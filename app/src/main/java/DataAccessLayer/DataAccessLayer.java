@@ -67,19 +67,6 @@ public class DataAccessLayer {
     }
 
 
-    public void insert(String query){
-
-        if (_conn == null) {
-            return;
-        }
-        try {
-            Statement statement = _conn.createStatement();
-            statement.executeQuery(query);
-        }catch(Exception ex){
-            Log.e("dberror","Error occured at selecting");
-        }
-        return;
-    }
 
 
     public String getUserRole(String username, String password) {
@@ -170,7 +157,11 @@ public class DataAccessLayer {
     public UserModel getUser(String username, String password){
 
         if (_conn == null) {
-            return null ;
+            try{
+                throw new Exception("Error occured in connection!");
+
+            }catch(Exception e){
+            }
         }
 
         try {
@@ -180,8 +171,9 @@ public class DataAccessLayer {
             UserModel userModel = new UserModel();  //Id, User , Password, Role
             if (resultSet.next()) {
 
-                userModel.setId(Integer.parseInt(resultSet.getString("Id")));
+                userModel.setId(Integer.parseInt(resultSet.getString("idUsers")));
                 userModel.setRole(resultSet.getString("Role"));
+                Log.v("role",resultSet.getString("Role"));
                 return userModel;
 
             } else {
@@ -190,6 +182,12 @@ public class DataAccessLayer {
             }
         } catch (Exception ex) {
             Log.e("dberror", ex.getMessage());
+            try{
+                throw new Exception("Error occured in connection!");
+
+            }catch(Exception e){
+            }
+
             return null;
         }
     }

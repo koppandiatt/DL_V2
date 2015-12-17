@@ -179,10 +179,12 @@ public class LoginFragment extends Fragment {
 
                     UserModel userModel  = DataAccessLayer.getInstance().getUser(userid.trim(),userpass.trim());
 
-                    if (userModel.getRole() == null){
+                    if (userModel == null){
                         message = "Wrong credentials!";
                     }else{
-                        if (role.equals(DataAccessLayer.ERROR))  message = "Error occured in connection!";
+
+                        role = userModel.getRole();
+
                     }
 
                     _commonChannel.setUser(userModel);

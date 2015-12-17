@@ -5,7 +5,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.os.SystemClock;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +74,14 @@ public class PracticeFragment extends Fragment {
 
     private IFragmentsStarter fragmentsStarter;
 
+    private long startTime = 0L;
+
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedTime = 0L;
+
+    public PracticeFragment(){}
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +93,10 @@ public class PracticeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test_license, container, false);
+        View view = inflater.inflate(R.layout.fragment_test_license, container, false);
+        initializeGUIReferences(view);
+
+        return view;
     }
 
     private void initializeGUIReferences(View view){
@@ -102,8 +114,6 @@ public class PracticeFragment extends Fragment {
         imgView = (ImageView) view.findViewById(R.id.IVtestimg);
 
         btnNext.setText("Next");
-
-        pageNumView.setText("0/" + Settings.questionNUM);
 
         btnNext.setOnClickListener(new View.OnClickListener() {
 
@@ -178,6 +188,64 @@ public class PracticeFragment extends Fragment {
 
     }
 
+    public void startTimer() {
+
+        timer = new Timer();
+
+        initializeTimerTask();
+
+        timer.schedule(timerTask, 5, 1000);
+    }
+
+
+
+    public void stoptimertask() {
+
+        if (timer != null) {
+
+            timer.cancel();
+
+            timer = null;
+        }
+    }
+
+
+
+    public void initializeTimerTask() {
+
+        timerTask = new TimerTask() {
+
+            public void run() {
+
+
+
+
+                handler.post(new Runnable() {
+
+                    public void run() {
+
+                        //get the current timeStamp
+
+                        timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+
+                        updatedTime = timeSwapBuff + timeInMilliseconds;
+                        int secs = (int) (updatedTime / 1000);
+                        int mins = secs / 60;
+                        secs = secs % 60;
+                        int milliseconds = (int) (updatedTime % 1000);
+                        timerView.setText("" + mins + ":" + String.format("%02d", secs));
+
+                    }
+
+                });
+
+            }
+
+        };
+
+    }
+
+
     private class GetQuestion extends AsyncTask<String,String,Boolean> {
 
         @Override
@@ -213,6 +281,7 @@ public class PracticeFragment extends Fragment {
                 Toast.makeText(getActivity(), "Error occured !", Toast.LENGTH_LONG).show();
                 return;
             }
+            if (countAnsw == 0)  startTime = SystemClock.uptimeMillis();
             countAnsw++;
             fillQuestionGUI();
 
