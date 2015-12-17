@@ -67,6 +67,19 @@ public class DataAccessLayer {
     }
 
 
+    public void insert(String query){
+
+        if (_conn == null) {
+            return;
+        }
+        try {
+            Statement statement = _conn.createStatement();
+            statement.executeUpdate(query);
+        }catch(Exception ex){
+            Log.e("dberror","Error occured at selecting");
+        }
+        return;
+    }
 
 
     public String getUserRole(String username, String password) {
@@ -81,7 +94,7 @@ public class DataAccessLayer {
             Statement statement = _conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
-                return resultSet.getString("role");
+                return resultSet.getString("Role");
 
             } else {
                 return null;
@@ -106,20 +119,6 @@ public class DataAccessLayer {
             Log.e("dberror","Error occured at selecting");
         }
         return null;
-    }
-
-    public void insert(String query){
-
-        if (_conn == null) {
-            return;
-        }
-        try {
-            Statement statement = _conn.createStatement();
-            statement.executeUpdate(query);
-        }catch(Exception ex){
-            Log.e("dberror","Error occured at selecting" + ex.getMessage());
-        }
-        return;
     }
 
     public void addUser(String name, String pass)
@@ -151,6 +150,31 @@ public class DataAccessLayer {
         } catch (Exception ex) {
             Log.e("dberror", ex.getMessage());
             return;
+        }
+    }
+
+    public ArrayList<UserModel> getClients(){
+
+        if (_conn == null) {
+            return null ;
+        }
+
+        try {
+            String query = "SELECT * FROM users WHERE Role='client'";
+            Statement statement = _conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            ArrayList<UserModel> users = new ArrayList<UserModel>();
+            while(resultSet.next()) {
+                UserModel userModel = new UserModel();  //Id, User , Password, Role
+                userModel.setId(resultSet.getInt("idUsers"));
+                userModel.setEmail(resultSet.getString("User"));
+                userModel.setRole(resultSet.getString("Role"));
+                users.add(userModel);
+            }
+            return users;
+        } catch (Exception ex) {
+            Log.e("dberror", ex.getMessage());
+            return null;
         }
     }
 
