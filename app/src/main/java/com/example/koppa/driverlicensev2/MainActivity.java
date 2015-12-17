@@ -33,6 +33,7 @@ import fragments.ClientFragment;
 import fragments.LoginFragment;
 import fragments.PracticeFragment;
 import fragments.QuestionListFragment;
+import fragments.SettingsFragment;
 import fragments.StatisticFragment;
 import fragments.TestLicense;
 
@@ -266,6 +267,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_client_practice:
                 addPracticeFragment();
+                break;
+
+            case R.id.nav_admin_settings:
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                SettingsFragment settingsFragment = new SettingsFragment();
+                fragmentTransaction.replace(R.id.fragment_container, settingsFragment);
+                fragmentTransaction.commit();
                 break;
             default:
                 break;

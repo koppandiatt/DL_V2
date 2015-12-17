@@ -2,6 +2,8 @@ package fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -23,10 +25,11 @@ import java.util.ArrayList;
 import Controller.ClientController;
 import Models.UserModel;
 import Models.StatisticModel;
+import Tools.BackHandledFragment;
 import Tools.StatisticListAdapter;
 
 
-public class StatisticFragment extends Fragment {
+public class StatisticFragment extends BackHandledFragment {
 
 
     private ListView listView;
@@ -35,6 +38,22 @@ public class StatisticFragment extends Fragment {
 
     private UserModel userModel;
     ArrayList<StatisticModel> statistics;
+
+    @Override
+    public String getTagText() {
+        return null;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        AdminStatisticFragment editQuestionFragment = new AdminStatisticFragment();
+        fragmentTransaction.replace(R.id.fragment_container, editQuestionFragment);
+        fragmentTransaction.commit();
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

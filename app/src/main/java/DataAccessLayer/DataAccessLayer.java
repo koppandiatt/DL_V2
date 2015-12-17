@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Models.UserModel;
+import fragments.LoginFragment;
 
 /**
  * Created by koppa on 26.11.2015.
@@ -406,6 +407,40 @@ public class DataAccessLayer {
             e.printStackTrace();
         }
         return ids;
+    }
+
+    public void setSettings(int nrq, int time, int limit){
+        if (_conn == null) {
+            return;
+        }
+
+        try {
+
+            String query = "UPDATE settings SET `NrQ`=?, `Time`=?, `Limit`=? WHERE ID=1";
+
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = _conn.prepareStatement(query);
+
+            preparedStmt.setInt(1, nrq);
+            preparedStmt.setInt(2, time);
+            preparedStmt.setInt(3, limit);
+
+            // execute the preparedstatement
+            int affectedRows = preparedStmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+            String s = String.valueOf(affectedRows);
+            Log.d("affectedRow", s);
+
+        } catch (SQLException se){
+            Log.e("sqlError", se.toString());
+            return;
+        } catch (Exception ex) {
+            Log.e("dberror", ex.getMessage());
+            return;
+        }
     }
 }
 
