@@ -3,6 +3,7 @@ package fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,11 +28,11 @@ import Tools.QuestionListAdapter;
 public class QuestionListFragment extends Fragment{
 
 
-    ListView listView;
-    ProgressBar progressBar;
-    QuestionListAdapter questionListAdapter;
-    ArrayList<QuestionModel> questionModelArrayList;
-
+    private ListView listView;
+    private ProgressBar progressBar;
+    private QuestionListAdapter questionListAdapter;
+    private ArrayList<QuestionModel> questionModelArrayList;
+    private View view;
 
     public QuestionListFragment(){
 
@@ -45,7 +46,7 @@ public class QuestionListFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_list_question,container,false);
+        view = inflater.inflate(R.layout.fragment_list_question,container,false);
 
         progressBar = (ProgressBar) getActivity().findViewById(R.id.mainprogressBar);
         progressBar.setVisibility(View.GONE);
@@ -84,16 +85,19 @@ public class QuestionListFragment extends Fragment{
 
     private class LoadQuestion extends AsyncTask<String,String,String> {
 
+        Context context;
+
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
+            context = view.getContext();
         }
 
 
         @Override
         protected String doInBackground(String... params) {
             questionModelArrayList = AdminModel.getQuestions();
-            questionListAdapter = new QuestionListAdapter(getContext(),0, questionModelArrayList);
+            questionListAdapter = new QuestionListAdapter(context, 0, questionModelArrayList);
             return "OK";
         }
 

@@ -124,6 +124,37 @@ public class DataAccessLayer {
         return;
     }
 
+    public void addUser(String name, String pass)
+    {
+        if (_conn == null) {
+            return;
+        }
+
+        try {
+
+            String query = "INSERT INTO users (User, Password, Role)"
+                    + " VALUES (?, ?, ?)";
+
+            // create the mysql insert preparedstatement
+            PreparedStatement preparedStmt = _conn.prepareStatement(query);
+            preparedStmt.setString(1, name);
+            preparedStmt.setString(2, pass);
+            preparedStmt.setString(3, "client");
+            // execute the preparedstatement
+            int affectedRows = preparedStmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+        } catch (SQLException se){
+            Log.e("sqlError", se.getMessage());
+            return;
+        } catch (Exception ex) {
+            Log.e("dberror", ex.getMessage());
+            return;
+        }
+    }
 
     public long InsertNewQuestion(String question, String imgUrl) {
 

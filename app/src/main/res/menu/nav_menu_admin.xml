@@ -7,25 +7,21 @@
                 android:title="Add question" />
             <item android:id="@+id/nav_admin_edit" android:icon="@android:drawable/ic_menu_edit"
                 android:title="Edit question" />
-            <item android:id="@+id/nav_admin_delete" android:icon="@android:drawable/ic_menu_delete"
-                android:title="Delete question" />
+        </menu>
+    </item>
+
+    <item android:title="Profile">
+        <menu>
+            <item android:id="@+id/nav_admin_users" android:icon="@android:drawable/ic_menu_my_calendar"
+                android:title="Users" />
         </menu>
     </item>
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_admin_users" android:icon="@android:drawable/ic_menu_my_calendar"
-            android:title="Users" />
-        <item android:id="@+id/nav_admin_statistics" android:icon="@android:drawable/ic_menu_agenda"
-            android:title="Statistics" />
+        <item android:id="@+id/nav_admin_sign_out" android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:title="Sign out" />
     </group>
 
-    <item android:title="Profile">
-        <menu>
-            <item android:id="@+id/nav_admin_settings" android:icon="@android:drawable/ic_menu_manage"
-                android:title="Settings" />
-            <item android:id="@+id/nav_admin_sign_out" android:icon="@android:drawable/ic_menu_close_clear_cancel"
-                android:title="Sign out" />
-        </menu>
-    </item>
+
 
 </menu>
